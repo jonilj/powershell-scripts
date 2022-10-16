@@ -1,4 +1,4 @@
-﻿# Get latest version number of LimeCRM
+﻿## Get latest version number of LimeCRM (used for detecting application in Microsoft Endpoint Manager / Intune)
 $onlineJson = Invoke-WebRequest 'https://builds.lundalogik.com/api/v1/builds/limecrm-desktop/versions/' | ConvertFrom-Json
 $appVersion = $onlineJson.versions_list | Select-Object -Last 1
 $appVersion = $appVersion.version
