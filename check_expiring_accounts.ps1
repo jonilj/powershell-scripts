@@ -23,7 +23,7 @@ foreach($User in $Users)
 
 
     ## Get the users properties and expiry date. These variables will be used in the e-mail.
-    $Userobj = $User | Get-ADUser -Server pradse001.se.novamedia.com -Properties Name,AccountExpirationDate
+    $Userobj = $User | Get-ADUser -Server [AD-server] -Properties Name,AccountExpirationDate
     $ExpiryDate = $($Userobj.AccountExpirationDate.tostring(“dd/MM/yyyy”))
 
 
