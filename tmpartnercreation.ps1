@@ -48,8 +48,8 @@ Function Create-Username
 
     ## The section below will test several conditions to make sure a username is generated that is not already taken
     $nameCollision = Get-ADUser -Filter {SamAccountName -eq $username}
-    $disabledAccount = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "OU=Disabled TM Accounts,OU=Users,OU=.SE,DC=se,DC=novamedia,DC=com" | Where {"$checkFirst $checkSecond" -eq $_.Name}
-    $accountExists = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "OU=$tmPartner,OU=Users,OU=.SE,DC=se,DC=novamedia,DC=com" | Where {"$checkFirst $checkSecond" -eq $_.Name}
+    $disabledAccount = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "$OU" | Where {"$checkFirst $checkSecond" -eq $_.Name}
+    $accountExists = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "$OU" | Where {"$checkFirst $checkSecond" -eq $_.Name}
 
     ## Start testing conditions to get a username that is not in use
     if ($nameCollision -eq $null) {
@@ -61,7 +61,7 @@ Function Create-Username
     else {
         $usernamePartOne = $firstName.Substring(0, [Math]::Min($FirstName.Length, 2))
         $usernamePartTwo = $lastName.Substring(0, [Math]::Min($LastName.Length, 4))
-        $username = "setm$usernamePartOne$usernamePartTwo"
+        $username = "$usernamePartOne$usernamePartTwo"
     }
     return $username.ToLower()
 }
@@ -179,13 +179,13 @@ Please choose TM-partner"
     } while ($tmPartner -notmatch "TMPartner1|TMPartner2|TMPartner3|TMPartner4|TMPartner5")
 
 ## Set OU
-$OU = "OU=$tmPartner,[redacted]"
+$OU = "$OU"
 
 ## Set correct AD-group depending on TM-partner as naming standards in AD differ
 $tmPartnerName = Correct-TMPartnerName
 
 ## Set which AD-group to add
-$groupToAdd = ".u.$tmPartnerName.agent"
+$groupToAdd = "$tmPartnerName.agent"
 
 ## Set parameters for name of CSV-file
 $nameCSV = $tmPartnerName + "_" + $((Get-Date).ToString('MM-dd-yyyy'))
@@ -210,8 +210,8 @@ foreach ($User in $ADUsers)
     $username = Create-Username  
 
     ## Test if the account already exists as a disabled account
-    $disabledAccount = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "OU=Disabled TM Accounts,[redacted]" | Where {"$firstName $lastName" -eq $_.Name}
-    $accountExists = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "OU=$tmPartner,[redacted]" | Where {"$firstName $lastName" -eq $_.Name}
+    $disabledAccount = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "$OU" | Where {"$firstName $lastName" -eq $_.Name}
+    $accountExists = Get-ADUser -Filter {SamAccountName -eq $username} -SearchBase "$OU" | Where {"$firstName $lastName" -eq $_.Name}
 
     ## Start testing conditions to get a username that is not in use
     if (($disabledAccount -eq $null) -and ($accountExists -eq $null)) {
