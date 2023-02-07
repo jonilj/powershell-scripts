@@ -1,6 +1,6 @@
 ﻿#############################################################################################################
 # This script will look for accounts that expire within 30 days and e-mail a notification to their manager. #
-# Partly compiled, partly written by Joni Ljungqvist, EUC, 2021-03-12.                                      #
+# Partly compiled, partly written by Joni Ljungqvist, 2021-03-12.                                           #
 #############################################################################################################
 
 ## Check for users who' account will expire within 30 days.
